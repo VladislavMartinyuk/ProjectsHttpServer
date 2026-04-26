@@ -1,8 +1,7 @@
 #include "variantvalue.h"
 
 VariantValue::VariantValue(std::string_view value)
-    : value(value)
-      , stringValue(value)
+    : stringValue(value)
 {
 }
 
@@ -24,11 +23,6 @@ VariantValue::VariantValue(double value)
 std::string VariantValue::toString() const
 {
     return stringValue;
-}
-
-std::string_view VariantValue::toStringView() const
-{
-    return value;
 }
 
 int VariantValue::toInt() const

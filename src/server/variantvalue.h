@@ -14,14 +14,12 @@ public:
     explicit VariantValue(double value);
 
     std::string toString() const;
-    std::string_view toStringView() const;
     int toInt() const;
     int64_t toInt64() const;
     float toFloat() const;
     double toDouble() const;
 
 private:
-    std::string_view value;
     std::string stringValue;
     int intValue{0};
     float floatValue{0};

@@ -11,7 +11,7 @@ int main()
                          [](RouteParams routeParams,
                             QueryParams) {
                              std::cout << "GET METHOD" << std::endl;
-                             std::string_view uuid = routeParams.at("uuid").toStringView();
+                             auto uuid = routeParams.at("uuid").toString();
                              int customerId = routeParams.at("customer_id").toInt();
                              std::cout << "Route params:" << " uuid: " << uuid << " " << customerId
                                  << std::endl;
@@ -22,7 +22,7 @@ int main()
                          [](RouteParams routeParams,
                             QueryParams) {
                              std::cout << "POST METHOD" << std::endl;
-                             std::string_view uuid = routeParams.at("uuid").toStringView();
+                             auto uuid = routeParams.at("uuid").toString();
                              int customerId = routeParams.at("customer_id").toInt();
                              std::cout << "Route params:" << " uuid: " << uuid << " " << customerId
                                  << std::endl;
@@ -32,12 +32,12 @@ int main()
                          "/users/{uuid:str}/customers/{customer_uuid:str}",
                          [](RouteParams routeParams,
                             QueryParams queryParams) {
-                             std::string_view uuid = routeParams.at("uuid").toStringView();
-                             std::string_view customerUuid = routeParams.at("customer_uuid").
-                                 toStringView();
+                             auto uuid = routeParams.at("uuid").toString();
+                             auto customerUuid = routeParams.at("customer_uuid").
+                                 toString();
                              std::cout << "Route params:" << " uuid: " << uuid << " customer uuid: "
                                  << customerUuid << std::endl;
-                             std::string_view bookName = queryParams.at("book_name").toStringView();
+                             auto bookName = queryParams.at("book_name").toString();
                              int64_t authorId = queryParams.at("author_id").toInt64();
                              std::cout << "Query params:" << " book name: " << bookName
                                  << " author id: " << authorId << std::endl;

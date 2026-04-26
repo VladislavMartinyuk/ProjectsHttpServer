@@ -25,7 +25,7 @@ void TrieHttpRouter::registerRoute(http::verb method, std::string_view pattern,
             }
         } else {
             registerAsStatic(segment, current);
-            current = current->staticChildren[segment].get();
+            current = current->staticChildren[std::string{segment}].get();
         }
     }
     current->method = std::move(method);
@@ -43,9 +43,8 @@ void TrieHttpRouter::processRoute(http::verb method, std::string_view route)
     if (!methodNamesByVerb.contains(method)) {
         return;
     }
-    std::string_view methodString = methodNamesByVerb[method];
-    std::vector<std::string_view> splitRoute;
-    splitRoute.push_back(methodString);
+    std::vector<std::string> splitRoute;
+    splitRoute.push_back(methodNamesByVerb[method]);
     auto splitUri = split(routWithoutQuery, '/');
     splitRoute.insert(splitRoute.end(), splitUri.begin(), splitUri.end());
     NodePtr current = root.get();
@@ -65,20 +64,20 @@ void TrieHttpRouter::processRoute(http::verb method, std::string_view route)
     }
 }
 
-std::vector<std::string_view> TrieHttpRouter::split(std::string_view segment,
+std::vector<std::string> TrieHttpRouter::split(std::string_view segment,
                                                     char splitCharacter) const
 {
-    std::vector<std::string_view> result;
+    std::vector<std::string> result;
     size_t start{0};
     size_t end = segment.find(splitCharacter, start);
     while (end != std::string_view::npos) {
         if (end - start > 0) {
-            result.push_back(segment.substr(start, end - start));
+            result.push_back(std::string{segment.substr(start, end - start)});
         }
         start = end + 1;
         end = segment.find(splitCharacter, start);
     }
-    result.push_back(segment.substr(start));
+    result.push_back(std::string{segment.substr(start)});
     return result;
 }
 
@@ -111,8 +110,9 @@ TrieHttpRouter::NodePtr TrieHttpRouter::registerAsDynamic(std::string_view segme
 
 void TrieHttpRouter::registerAsStatic(std::string_view segment, NodePtr current)
 {
-    if (!current->staticChildren.contains(segment)) {
-        current->staticChildren[segment] = std::make_unique<Node>();
+    std::string segmentString{segment};
+    if (!current->staticChildren.contains(segmentString)) {
+        current->staticChildren[segmentString] = std::make_unique<Node>();
     }
 }
 

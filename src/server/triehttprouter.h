@@ -10,7 +10,7 @@
 
 #include "variantvalue.h"
 
-using RouteParams = std::unordered_map<std::string_view, VariantValue>;
+using RouteParams = std::unordered_map<std::string, VariantValue>;
 using QueryParams = RouteParams;
 using CallBack = std::function<void(RouteParams, QueryParams)>;
 
@@ -33,7 +33,7 @@ private:
         {"str", DynamicType::String}
     };
 
-    std::unordered_map<http::verb, std::string_view> methodNamesByVerb{
+    std::unordered_map<http::verb, std::string> methodNamesByVerb{
         {http::verb::get, "GET"},
         {http::verb::post, "POST"},
         {http::verb::put, "PUT"},
@@ -45,10 +45,10 @@ private:
 
     struct Node
     {
-        std::unordered_map<std::string_view, std::unique_ptr<Node> > staticChildren;
+        std::unordered_map<std::string, std::unique_ptr<Node> > staticChildren;
         std::vector<std::unique_ptr<Node> > dynamicChildren;
         DynamicType dynamicType;
-        std::string_view dynamicFieldName;
+        std::string dynamicFieldName;
         http::verb method;
         CallBack callBack;
     };
@@ -57,7 +57,7 @@ private:
 
     std::unique_ptr<Node> root;
 
-    std::vector<std::string_view> split(std::string_view segment,
+    std::vector<std::string> split(std::string_view segment,
                                         char splitCharacter) const;
     NodePtr registerAsDynamic(std::string_view segment, NodePtr current);
     void registerAsStatic(std::string_view segment, NodePtr current);
